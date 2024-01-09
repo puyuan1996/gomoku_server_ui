@@ -37,22 +37,21 @@ const Board = () => {
     }
     // 如果点击的位置没有棋子
     if (board[i][j] === 0) {
-      // 如果深度为0，需要与服务器通信
-      if (depth === 0) {
+      // 如果深度小于等于0，需要与服务器通信
+      if (depth <= 0) {
         try {
           // 先在本地进行临时移动
           dispatch(tempMove([i, j]))
           // 向服务器发送步骤信息，并等待响应
-          const response = await axios.post('http://127.0.0.1:5001/gomoku_ui/', {
+          const response = await axios.post('http://127.0.0.1:5001/gomoku_server_ui/', {
             command: 'step',
-            argument: [i, j], // 这里需要根据服务器要求调整数据格式
-            action: [i, j], // 这里需要根据服务器要求调整数据格式
+            argument: [i, j, depth], // [i,j] 表示玩家点击的动作，当depth<=0时，根据 depth 确定 Agent Type
             uid: ':1' // 如果需要的话，这里应填入玩家的唯一标识符
           });
-          // 服务器响应的数据，这里假设服务器返回的bot动作格式为 {'i': x, 'j': y }
+          // 服务器响应的数据，这里假设服务器返回的 Agent 动作格式为 {'i': x, 'j': y }
           const agentAction = response.data.result.action;
           // 使用服务器返回的动作更新Redux store
-          dispatch(movePiece({ position: [i, j, agentAction.i, agentAction.j], depth: 0 }));
+          dispatch(movePiece({ position: [i, j, agentAction.i, agentAction.j], depth: depth }));
         } catch (error) {
           // 如果通信失败，则打印错误信息
           console.error('Error communicating with the server: ', error.response || error);
@@ -61,7 +60,7 @@ const Board = () => {
         // 如果不需要与服务器通信，直接在本地执行移动
         dispatch(tempMove([i, j]))
         dispatch(movePiece({ position: [i, j], depth }));
-        console.log(' depth != 0 ');
+        console.log('depth > 0 ');
       }
     }
   };

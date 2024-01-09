@@ -98,7 +98,9 @@ function Control() {
             disabled={loading}
             options={[
               // 选项中的value代表AI的深度，label是显示给用户看的类型名称
-              { value: '0', label: 'LightZero Agent' },
+              { value: '-2', label: 'Random' },
+              { value: '-1', label: 'LightZero RuleBot' },
+              { value: '0', label: 'LightZero AlphaZero' },
               { value: '2', label: 'AB-2' },
               { value: '4', label: 'AB-4' },
               // 注释掉的是其他可能的AI类型选项，这些被替换为更专业的名称了

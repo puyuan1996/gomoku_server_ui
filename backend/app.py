@@ -1,6 +1,6 @@
 # 配置环境变量，添加miniconda环境的路径到系统PATH中，以便可以使用该环境中的Python及其库
 # export PATH="/Users/puyuan/miniconda3/envs/arm64-py38/bin:$PATH"
-# 设置Flask应用相关的环境变量
+# 设置Flask应用相关的环境变量并启动Flask应用
 # FLASK_APP=app.py FLASK_ENV=development FLASK_DEBUG=1 flask run --port 5001
 
 import time  # 导入time模块用于时间操作
@@ -12,7 +12,7 @@ app = Flask(__name__)  # 初始化Flask应用
 api = Api(  # 初始化REST API
     app=app,
     version="0.0.1",  # API版本
-    title="gomoku_ui App",  # API标题
+    title="gomoku_server_ui App",  # API标题
     description="Play Gomoku with LightZero Agent, Powered by OpenDILab"  # API描述
 )
 
@@ -29,17 +29,16 @@ def after_request(response):
 
 
 # 定义REST API的命名空间
-name_space = api.namespace('gomoku_ui', description='gomoku_ui APIs')
+name_space = api.namespace('gomoku_server_ui', description='gomoku_server_ui APIs')
 # 定义传入API的数据模型
 model = api.model(
-    'gomoku_ui params', {
-        'command': fields.String(required=False, description="Command Field", help="reset, step"),
-        'argument': fields.Integer(required=False, description="Argument Field", help="reset->level, step->action"),
+    'gomoku_server_ui params', {
+        'command': fields.String(required=False, description="Command Field", help="可选参数为：reset, step"),
+        'argument': fields.Integer(required=False, description="Argument Field", help="如果输入 cmd 是 reset，则 argument 表示 agent type, 如果输入 cmd 是 step，则 argument 表示 [action_x, action_y, agent_type]"),
     }
 )
 
 MAX_ENV_NUM = 50  # 最大环境数限制
-# ENV_TIMEOUT_SECOND = 60  # 环境超时时间（秒）
 ENV_TIMEOUT_SECOND = 6000  # 环境超时时间（秒）
 
 import sys
@@ -71,6 +70,8 @@ agent = Agent()  # 创建一个Agent实例
 
 envs = {}  # 初始化环境字典
 envs['127.0.0.1:1'] = {'env': env, 'update_time': time.time()}
+# 假设这是类外面的全局变量
+# envs = {}
 
 from threading import Thread, Lock
 
@@ -103,7 +104,6 @@ class MainClass(Resource):  # 定义一个资源类
     @api.expect(model)  # 指定预期的输入模型
     def post(self):  # 定义处理POST请求的方法
         try:
-            # print('position 1')
             t_start = time.time()  # 记录开始处理请求的时间
             data = request.json  # 获取请求的JSON数据
             cmd, arg, uid = data['command'], data['argument'], data['uid']  # 从数据中提取命令、参数和用户ID
@@ -145,11 +145,21 @@ class MainClass(Resource):  # 定义一个资源类
 
             # 根据不同的命令，处理游戏逻辑
             if cmd == 'reset':
+                # cmd == 'reset' 表示前端玩家设置了 AI 先手，需要重置游戏环境, 并返回一个 Agent action
                 observation = env.reset()  # 重置游戏环境
-                agent_action = env.random_action()  # 获取一个随机动作
-                # agent_action = agent.compute_action(observation)  # 或者让智能体计算动作，这里注释掉了
-                print('reset agent action: {}'.format(agent_action))
-                done, info = False, None
+                agent_type = arg
+                print('agent type: {}'.format(agent_type))
+                if agent_type == -2:  # 'Random'
+                    agent_action = env.random_action()  # 获取一个随机动作
+                elif agent_type == -1:  # 'RuleBot':
+                    agent_action = env.bot_action()  # 让规则玩家计算动作
+                elif agent_type == 0:   # 'AlphaZero'
+                    agent_action = agent.compute_action(observation)  # 让智能体计算动作
+                # 更新游戏环境
+                observation, reward, done, info = env.step(agent_action)
+                # print('original agent action: {}'.format(agent_action))
+                agent_action = {'i': int(agent_action // 15), 'j': int(agent_action % 15)}
+                print('agent action: {}'.format(agent_action))
                 # 返回一个响应，包含游戏板状态、智能体动作、游戏是否结束和其他信息
                 response = jsonify(
                     {
@@ -164,19 +174,25 @@ class MainClass(Resource):  # 定义一个资源类
                     }
                 )
 
-            # 目前 cmd 只有 "step" 起作用，目前如果 Agent 先手，则执行内在的(7,7)动作
             elif cmd == 'step':
+                # 使用之前存储的键来检索环境
                 data = request.json
-                action = data.get('action')  # 前端发送的动作  action: [i, j] 从0开始的，表示下在第i+1行，第j+1列
+                action = data.get('argument')[:-1]  # 前端发送的动作  action: [i, j] 从0开始的，表示下在第i+1行，第j+1列
                 print(f'前端发送过来的动作: {action}')
+                agent_type = data.get('argument')[-1]
+                print('agent type: {}'.format(agent_type))
                 action = action[0] * 15 + action[1]
                 # 更新游戏环境
                 observation, reward, done, info = env.step(action)
+                env.render()
                 # 如果游戏没有结束，获取 agent 的动作
                 if not done:
-                    agent_action = env.random_action()
-                    # agent_action = env.agent_action()
-                    # agent_action = agent.compute_action(observation)
+                    if agent_type == -2:  # 'Random'
+                        agent_action = env.random_action()  # 获取一个随机动作
+                    elif agent_type == -1:  # 'RuleBot':
+                        agent_action = env.bot_action()  # 让规则玩家计算动作
+                    elif agent_type == 0:  # 'AlphaZero'
+                        agent_action = agent.compute_action(observation)  # 让智能体计算动作
                     # 更新环境状态
                     _, _, done, _ = env.step(agent_action)
                     # 准备响应数据
@@ -188,7 +204,7 @@ class MainClass(Resource):  # 定义一个资源类
                     agent_action = {'i': -1, 'j': -1}  # 如果游戏结束，agent 的动作置为特殊的值，表示游戏结束
                     observation = env.reset()  # 重置游戏环境
 
-                print(type(agent_action), type(done), type(info))
+                # print(type(agent_action), type(done), type(info))
                 response = {
                     "statusCode": 200,
                     "status": "Execution action",
