@@ -2,6 +2,7 @@
 ../node_modules
 /frontend/node_modules
 /backend/data_*
+backend/__pycache__/*
 
 /dist
 

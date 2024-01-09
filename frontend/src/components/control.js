@@ -86,7 +86,7 @@ function Control() {
       <div className="setting">
         {/* AI先手开关*/}
         <div className="setting-item">
-          AI先手: <Switch defaultChecked={aiFirst} onChange={onFirstChange} disabled={loading} />
+          AI 先手: <Switch defaultChecked={aiFirst} onChange={onFirstChange} disabled={loading} />
         </div>
         {/* AI类型选择器，包含不同深度的AI选项*/}
         <div className="setting-item">
@@ -99,8 +99,8 @@ function Control() {
             options={[
               // 选项中的value代表AI的深度，label是显示给用户看的类型名称
               { value: '-2', label: 'Random' },
-              { value: '-1', label: 'LightZero RuleBot' },
-              { value: '0', label: 'LightZero AlphaZero' },
+              { value: '-1', label: 'RuleBot' },
+              { value: '0', label: 'AlphaZero' },
               { value: '2', label: 'AB-2' },
               { value: '4', label: 'AB-4' },
               // 注释掉的是其他可能的AI类型选项，这些被替换为更专业的名称了
@@ -113,7 +113,7 @@ function Control() {
         </div>
         {/* 序号开关，控制是否显示序号*/}
         <div className="setting-item">
-          序号: <Switch defaultChecked={index} onChange={onIndexChange} />
+          显示棋子步数: <Switch defaultChecked={index} onChange={onIndexChange} />
         </div>
       </div>
       {/* 状态显示区域，显示当前评分、深度、路径和历史步骤 */}
