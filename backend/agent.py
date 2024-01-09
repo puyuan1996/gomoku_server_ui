@@ -1,5 +1,4 @@
 import sys
-
 sys.path.append("/Users/puyuan/code/LightZero/")
 from functools import partial
 import torch
@@ -61,9 +60,6 @@ class Agent:
 
 
 if __name__ == '__main__':
-    import sys
-
-    sys.path.append("/Users/puyuan/code/LightZero/")
     from easydict import EasyDict
     from zoo.board_games.gomoku.envs.gomoku_env import GomokuEnv
     cfg = EasyDict(
@@ -100,4 +96,3 @@ if __name__ == '__main__':
             print('bot action: {}'.format(agent_action))
         else:
             break
-

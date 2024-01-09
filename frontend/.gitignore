@@ -3,6 +3,8 @@
 ../frontend/node_modules
 
 /dist
+/data_az_ctree
+/__pycache__
 
 # local env files
 .env.local

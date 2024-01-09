@@ -34,6 +34,14 @@ FLASK_APP=app.py FLASK_ENV=development FLASK_DEBUG=1 flask run --port 5001
 
 上面的命令将设置必要的环境变量，然后启动Flask服务器。
 
+### 与AI对战
+
+在前端渲染得到的界面上，您可以选择与不同的AI对战，如下所示：
+
+- [难度] 选择 `LightZero Agent` 就是与后端的 Python Gomoku Env 里面的 Agent (基于规则的 Bot, 或者训练好的 AlphaZero Agent) 对战。
+
+- [难度] 选择 `AB-2, AB-4` 表示直接与[前端AI](https://github.com/lihongxun945/gobang) 中的 Alpha-Beta 减枝算法对战，其中 AB-x 中的 x 表示不同的搜索深度，也即不同的水平。
+
 ## 致谢
 
-在这个五子棋项目中，前端部分的设计和实现参考了[lihongxun945/gobang](https://github.com/lihongxun945/gobang)项目，感谢原作者提供的优秀代码作为参考。如果您对五子棋AI感兴趣，您可以访问原项目以了解更多详情。
+在这个五子棋项目中，前端部分是在[lihongxun945/gobang](https://github.com/lihongxun945/gobang)项目上进行了微调，感谢原作者提供的优秀代码作为参考。如果您对五子棋前端AI感兴趣，您可以访问原项目以了解更多详情。
