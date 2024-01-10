@@ -1,3 +1,4 @@
+<div id="top"></div>
 # 五子棋前后端集成示例
 
 ✨ 这是一个五子棋游戏的前后端集成方案，其中[前端界面](https://github.com/lihongxun945/gobang)基于 React 构建，提供了与用户的交互界面；
@@ -45,9 +46,12 @@ FLASK_APP=app.py FLASK_ENV=development FLASK_DEBUG=1 flask run --port 5001
 
 ### 与 AI 对战
 
-✨在前端渲染得到的界面上，一般网址为 http://localhost:3000/，您可以选择与不同的AI对战，如下所示：
+✨在前端渲染得到的界面上，一般网址为 http://localhost:3000/。
+您可以选择与不同的 AI 对战，具体界面如下所示：
 
-- [AI 类型] 选择 `AlphaZero` 就是与后端的基于 [LightZero](https://github.com/opendilab/LightZero) 的训练好的 AlphaZero Agent 对战。
+![ui.png](assets/img.png)
+
+- [AI 类型] 选择 `AlphaZero` 就是与基于 [LightZero](https://github.com/opendilab/LightZero) 预训练好的 AlphaZero Agent 对战。
 - [AI 类型] 选择 `RuleBot` 就是与 [LightZero](https://github.com/opendilab/LightZero) 中基于规则的 Bot, 或者训练好的 AlphaZero Agent) 对战。
 - [AI 类型] 选择 `Random` 就是与随机 Agent 对战。
 - [AI 类型] 选择 `AB-2, AB-4` 表示直接与[前端AI](https://github.com/lihongxun945/gobang) 中的 Alpha-Beta 减枝算法对战，其中 AB-x 中的 x 表示不同的搜索深度，也即不同的水平。
@@ -56,3 +60,5 @@ FLASK_APP=app.py FLASK_ENV=development FLASK_DEBUG=1 flask run --port 5001
 
 - 🎉在这个五子棋项目中，前端部分是在[lihongxun945/gobang](https://github.com/lihongxun945/gobang)项目上进行了微调，感谢原作者提供的优秀代码作为参考。如果您对五子棋前端AI感兴趣，您可以访问原项目以了解更多详情。
 - 🎉后端 AI 部分基于 [LightZero](https://github.com/opendilab/LightZero) 实现，如果你对 MCTS+RL 算法感兴趣，欢迎访问原项目。
+
+<p align="right">(<a href="#top">回到顶部</a>)</p>
