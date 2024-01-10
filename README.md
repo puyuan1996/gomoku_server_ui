@@ -1,4 +1,5 @@
 <div id="top"></div>
+
 # 五子棋前后端集成示例
 
 ✨ 这是一个五子棋游戏的前后端集成方案，其中[前端界面](https://github.com/lihongxun945/gobang)基于 React 构建，提供了与用户的交互界面；
