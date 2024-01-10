@@ -49,7 +49,7 @@ FLASK_APP=app.py FLASK_ENV=development FLASK_DEBUG=1 flask run --port 5001
 ✨在前端渲染得到的界面上，一般网址为 http://localhost:3000/。
 您可以选择与不同的 AI 对战，具体界面如下所示：
 
-![ui.png](assets/img.png)
+![ui.png](assets/ui.png)
 
 - [AI 类型] 选择 `AlphaZero` 就是与基于 [LightZero](https://github.com/opendilab/LightZero) 预训练好的 AlphaZero Agent 对战。
 - [AI 类型] 选择 `RuleBot` 就是与 [LightZero](https://github.com/opendilab/LightZero) 中基于规则的 Bot, 或者训练好的 AlphaZero Agent) 对战。
