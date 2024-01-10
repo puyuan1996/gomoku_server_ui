@@ -3,7 +3,7 @@
 # 五子棋前后端集成示例
 
 ✨ 这是一个五子棋游戏的前后端集成方案，其中[前端界面](https://github.com/lihongxun945/gobang)基于 React 构建，提供了与用户的交互界面；
-后端服务使用Flask框架搭建，基于 [LightZero](https://github.com/opendilab/LightZero) 实现了五子棋的 AI（包括基于规则的 Bot 和预训练好的 AlphaZero Agent）。
+后端服务使用Flask框架搭建，基于 [LightZero](https://github.com/opendilab/LightZero) 实现了五子棋的 AI（包括基于规则的 `RuleBot` 和预训练好的 `AlphaZero` Agent）。
 
 ## 快速上手
 
@@ -53,7 +53,7 @@ FLASK_APP=app.py FLASK_ENV=development FLASK_DEBUG=1 flask run --port 5001
 ![ui.png](assets/ui.png)
 
 - [AI 类型] 选择 `AlphaZero` 就是与基于 [LightZero](https://github.com/opendilab/LightZero) 预训练好的 AlphaZero Agent 对战。
-- [AI 类型] 选择 `RuleBot` 就是与 [LightZero](https://github.com/opendilab/LightZero) 中基于规则的 Bot, 或者训练好的 AlphaZero Agent) 对战。
+- [AI 类型] 选择 `RuleBot` 就是与 [LightZero](https://github.com/opendilab/LightZero) 中基于规则的 Bot 对战。
 - [AI 类型] 选择 `Random` 就是与随机 Agent 对战。
 - [AI 类型] 选择 `AB-2, AB-4` 表示直接与[前端AI](https://github.com/lihongxun945/gobang) 中的 Alpha-Beta 减枝算法对战，其中 AB-x 中的 x 表示不同的搜索深度，也即不同的水平。
 
